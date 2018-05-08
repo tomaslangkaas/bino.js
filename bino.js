@@ -1,33 +1,42 @@
-(function (prot) {
-  function construct(dwords, bitlength) {
+(function (inherit) {
+  bino.version = 'v0.1.0';
+  
+  function construct (dwords, bitlength) {
     this.setup(dwords, bitlength);
   }
-  (this.bino = function (dwords, bitlength) {
+  
+  function bino (dwords, bitlength) {
     return new construct(
       dwords === void 0 ? [] : [].concat(dwords), 
       bitlength);
-  }).prototype = construct.prototype = prot;
+  }
   
-  /* group string in chunks */
-  
-  this.bino.group = function (str, width, delimiter) {
-    return ('' + str).replace(
-      new RegExp('([^]{' + width + '})(?!$)', 'g'), 
-      "$1" + delimiter);
-  };
-  
-  this.bino.version = 'v0.1.0';
-})({
+  this.bino = bino;
+  bino.prototype = construct.prototype = inherit;
   
   /* setup function */
   
-  setup: function (data, bits) {
+  inherit.setup = function (data, bits) {
     this.data = data;
     bits = this.bits = bits || data.length << 5;
     data.length = (bits + 31) >>> 5;
     data[data.length - 1] &= -1 << (32 - (bits & 31));
     return this;
-  },
+  };
+  
+  /* group string in chunks */
+  
+  bino.group = function (str, width, delimiter) {
+    return ('' + str).replace(
+      new RegExp('([^]{' + width + '})(?!$)', 'g'), 
+      "$1" + delimiter);
+  };
+  
+})({
+  /* 
+    all functions below are independent modules,
+    any may be removed without any side effects
+  */
   
   /* read/write hexadecimal representations */
   
@@ -176,7 +185,7 @@
   
   /* constant-time comparison to another bino instance */
   
-  compare: function(binoInstance){
+  compare: function (binoInstance) {
     var pos = 0,
         result = 0,
         a = this.data,
@@ -193,7 +202,7 @@
     
   /* read/write strings of bits */
 
-  fromBinary: function(binString){
+  fromBinary: function (binString) {
     var charpos = 0, 
         bits = 0, 
         data = this.data, 
@@ -209,7 +218,7 @@
     }
     return this.setup(data, bits);
   },
-  toBinary: function(chunkSize, delimiter){
+  toBinary: function (chunkSize, delimiter) {
     var binString = "",
         pos = 0,
         data = this.data,
@@ -226,7 +235,7 @@
   
   /* read/write arrays of octets/bytes */
   
-  fromOctets: function(octets){
+  fromOctets: function (octets) {
     var pos = 0,
         len = octets.length,
         data = this.data;
@@ -239,7 +248,7 @@
     }
     return this.setup(data, len * 8);
   },
-  toOctets: function(){
+  toOctets: function () {
     var bits = this.bits,
         data = this.data,
         octets = [],
