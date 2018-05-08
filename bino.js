@@ -7,13 +7,20 @@
       dwords === void 0 ? [] : [].concat(dwords), 
       bitlength);
   }).prototype = construct.prototype = prot;
-  this.bino.chunk = function (str, width, delimiter) {
+  
+  /* group string in chunks */
+  
+  this.bino.group = function (str, width, delimiter) {
     return ('' + str).replace(
       new RegExp('([^]{' + width + '})(?!$)', 'g'), 
       "$1" + delimiter);
   };
+  
+  this.bino.version = 'v0.1.0';
 })({
-  //bino prototype
+  
+  /* setup function */
+  
   setup: function (data, bits) {
     this.data = data;
     bits = this.bits = bits || data.length << 5;
@@ -21,6 +28,9 @@
     data[data.length - 1] &= -1 << (32 - (bits & 31));
     return this;
   },
+  
+  /* read/write hexadecimal representations */
+  
   fromHex: function (hex, bits) {
     var bin = this.data,
       pos = 0,
@@ -41,22 +51,25 @@
     return this.setup(bin, bits || parsedBits);
   },
   toHex: function (chunkSize, delimiter) {
-    var bits = this.bits;
-    if ((bits & 3) === 0) {
-      var hex = "",
+    var bits = this.bits,
+        hex = "",
         pos = 0,
         data = this.data,
         len = data.length;
+    if ((bits & 3) === 0) {
       while (pos < len) {
         hex += (data[pos++] + 0xf00000000)
           .toString(16).slice(1)
       }
       hex = hex.slice(0, bits / 4);
       return chunkSize ?
-        bino.chunk(hex, chunkSize, delimiter || ' ') :
+        bino.group(hex, chunkSize, delimiter || ' ') :
         hex;
     }
   },
+  
+  /* read/write strings, represented as UTF-8 */
+  
   fromText: function (txt) {
     var bin = this.data,
       bits = 0,
@@ -87,6 +100,9 @@
       return decodeURIComponent(escape(txt));
     } catch (e) { }
   },
+  
+  /* read/write base 64 strings */
+  
   toBase64: function (chunkSize, delimiter) {
     var data = this.data,
       bits = this.bits,
@@ -120,7 +136,7 @@
       }
       while (charpos++ & 3) base64 += "=";
       return chunkSize ?
-        bino.chunk(base64, chunkSize, delimiter || ' ') :
+        bino.group(base64, chunkSize, delimiter || ' ') :
         base64;
     }
   },
@@ -151,7 +167,89 @@
     }
     return this.setup(bin, bits);
   },
+  
+  /* generate JavaScript source representation of bino instance */
+  
   toSource: function () {
     return 'bino([' + this.data + '],' + this.bits + ')';
+  },
+  
+  /* constant-time comparison to another bino instance */
+  
+  compare: function(binoInstance){
+    var pos = 0,
+        result = 0,
+        a = this.data,
+        b = binoInstance.data,
+        len = a.length;
+    if (this.bits !== binoInstance.bits){
+      return false;
+    }
+    for (; pos < len; pos++) {
+      result |= a[pos] ^ b[pos];
+    }
+    return !(result ^ 0);
+  },
+    
+  /* read/write strings of bits */
+
+  fromBinary: function(binString){
+    var charpos = 0, 
+        bits = 0, 
+        data = this.data, 
+        len = binString.length,
+        value;
+    while(charpos < len){
+      value = binString.charCodeAt(charpos++);
+      if(value >>> 1 === 24){
+        data[bits >>> 5] ^= 
+          (-(value & 1) ^ data[bits >>> 5]) & (1 << (31 - (bits & 31)));
+        bits++;
+      }
+    }
+    return this.setup(data, bits);
+  },
+  toBinary: function(chunkSize, delimiter){
+    var binString = "",
+        pos = 0,
+        data = this.data,
+        len = data.length;
+    while (pos < len) {
+      binString += (data[pos++] + 0xf00000000)
+        .toString(2).slice(4)
+    }
+    binString = binString.slice(0, this.bits);
+    return chunkSize ?
+      bino.group(binString, chunkSize, delimiter || ' ') :
+      binString;
+  },
+  
+  /* read/write arrays of octets/bytes */
+  
+  fromOctets: function(octets){
+    var pos = 0,
+        len = octets.length,
+        data = this.data;
+    for(;pos < len; pos += 4){
+      data[pos >>> 2] =
+        octets[pos    ] << 24 ^
+        octets[pos + 1] << 16 ^
+        octets[pos + 2] <<  8 ^
+        octets[pos + 3];
+    }
+    return this.setup(data, len * 8);
+  },
+  toOctets: function(){
+    var bits = this.bits,
+        data = this.data,
+        octets = [],
+        pos = 0;
+    if((bits & 7) === 0){
+      for(;pos < bits; pos += 8){
+        octets[pos >>> 3] = (data[pos >>> 5] >>> 
+             (24 - (pos & 31))) & 0xff;
+      }
+      return octets;
+    }
   }
 });
