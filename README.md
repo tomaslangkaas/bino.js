@@ -28,3 +28,20 @@ bino([1651076719,778728418,-2137757325,544696417,1950285824],144)
   .toText();
 > "bino.js—is what?"
 ```
+
+## Reference
+### bino([int32Array][, bits])
+### bino.setup(int32Array[,bits])
+### bino.group(chunkSize[,delimiter])
+### bino.compare(binoInstance)
+### bino.toSource()
+### bino.fromHex(hexString[,bits])
+### bino.toHex([chunkSize][,delimiter])
+### bino.fromBase64(base64String)
+### bino.toBase64([chunkSize][,delimiter])
+### bino.fromBinary(bitString)
+### bino.toBinary([chunkSize][,delimiter])
+### bino.fromText(txtString)
+### bino.toText()
+### bino.fromOctets(octetArray)
+### bino.toOctets()
