@@ -67,7 +67,7 @@
         len = data.length;
     if ((bits & 3) === 0) {
       while (pos < len) {
-        hex += (data[pos++] + 0xf00000000)
+        hex += ((data[pos++] | 0) + 0xf00000000)
           .toString(16).slice(1)
       }
       hex = hex.slice(0, bits / 4);
@@ -224,7 +224,7 @@
         data = this.data,
         len = data.length;
     while (pos < len) {
-      binString += (data[pos++] + 0xf00000000)
+      binString += ((data[pos++] | 0) + 0xf00000000)
         .toString(2).slice(4)
     }
     binString = binString.slice(0, this.bits);
