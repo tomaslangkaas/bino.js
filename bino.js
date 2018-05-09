@@ -100,14 +100,16 @@
       txt = "",
       pos = 0,
       toChar = String.fromCharCode;
-    while (pos < bits) {
-      txt += toChar((data[pos >>> 5] >>> 
-        (24 - (pos & 31))) & 0xff);
-      pos += 8;
+    if((bits & 7) === 0){
+      while (pos < bits) {
+        txt += toChar((data[pos >>> 5] >>> 
+          (24 - (pos & 31))) & 0xff);
+        pos += 8;
+      }
+      try {
+        return decodeURIComponent(escape(txt));
+      } catch (e) { }
     }
-    try {
-      return decodeURIComponent(escape(txt));
-    } catch (e) { }
   },
   
   /* read/write base 64 strings */
