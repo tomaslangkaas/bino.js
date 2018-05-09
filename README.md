@@ -219,6 +219,9 @@ bino()
   "Rpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRo\n" +
   "ZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm\n" +
   "5hbCBwbGVhc3VyZS4="
+
+bino().fromBinary('101').toText();
+> undefined
 ```
 
 #### `binoInstance.fromBinary(bitString)`
