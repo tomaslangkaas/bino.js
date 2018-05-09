@@ -310,3 +310,34 @@ bino().fromHex('97f').toOctets();
 > undefined
 ```
 ### Customization
+
+New functionality can be added to `bino.prototype`. As an example, let us demonstrate how to add a function to flip endianess of the current data. Flipping will only occur if the bit length is a multiple of 32.
+
+```javascript
+bino.prototype.flipEndian = function () {
+  var data = this.data,
+      bits = this.bits,
+      len  = data.length,
+      pos  = 0;
+  if((bits & 31) === 0){
+    while(pos < len){
+      data[pos] = data[pos] >>> 24 ^
+        ((data[pos] >> 8) & 0xff00) ^
+        ((data[pos] << 8) & 0xff0000) ^
+        data[pos] << 24;
+      pos++;
+    }
+  }
+  return this;
+}
+```
+
+Testing that it works:
+
+```javascript
+bino()
+  .fromHex('01 23 45 67 89 ab cd ef')
+  .flipEndian()
+  .toHex(2);
+> "67 45 23 01 ef cd ab 89"
+```
