@@ -1,5 +1,7 @@
 # bino.js
 
+`bino.js` &ndash; *binary data in JavaScript objects*
+
 ```javascript
 bino()
   .fromText('bino.js\u2014is what?')
@@ -37,7 +39,7 @@ bino([1651076719,778728418,-2137757325,544696417,1950285824],144)
 
 Constructs and returns a new `bino` instance. Does not require the `new` operator.
 
-The `data` and `bits` arguments are optional. Provide `data` as an array of signed 32-bit integers or a single signed 32-bit integer. By default, `bits` is set to the bit length of `data`.
+The `data` and `bits` arguments are optional. Provide `data` as an array of signed 32-bit integers or a single signed 32-bit integer. Unless explicitly set, `bits` defaults to the bit length of `data`.
 
 ```javascript
 // zero bit length data
