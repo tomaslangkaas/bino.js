@@ -11,7 +11,7 @@
       bitlength);
   }
   
-  this.bino = bino;
+  this.bino = this.Bino = bino;
   bino.prototype = construct.prototype = inherit;
   
   /* setup function */
@@ -40,24 +40,24 @@
   
   /* read/write hexadecimal representations */
   
-  fromHex: function (hex, bits) {
+  fromHex: function (hex) {
     var bin = this.data,
       pos = 0,
       c,
       len = hex.length,
-      parsedBits = 0;
+      bits = 0;
     while (pos < len) {
       c = hex.charCodeAt(pos++);
       if ((c > 47 && c < 58) || 
           (c > 64 && c < 71) || 
           (c > 96 && c < 103)) {
-        bin[parsedBits >>> 5] ^=
+        bin[bits >>> 5] ^=
           ((c > 64 ? c + 9 : c) & 15) << 
-          (28 - (parsedBits & 31));
-        parsedBits += 4;
+          (28 - (bits & 31));
+        bits += 4;
       }
     }
-    return this.setup(bin, bits || parsedBits);
+    return this.setup(bin, bits);
   },
   toHex: function (chunkSize, delimiter) {
     var bits = this.bits,
