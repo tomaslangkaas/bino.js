@@ -138,6 +138,10 @@ bino([0 | 0xffffffff, 0 | 0xffffffff], 57)
 > true
 ```
 
+#### `binoInstance.copy()`
+
+Returns a copy of the `bino` instance.
+
 ### Codecs
 
 #### `binoInstance.fromHex(hexString)`

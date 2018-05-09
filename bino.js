@@ -192,7 +192,7 @@
         result = 0,
         a = this.data,
         b = binoInstance.data,
-        len = a.length;
+        len = this.bits >>> 5;
     if (this.bits !== binoInstance.bits){
       return false;
     }
@@ -200,6 +200,12 @@
       result |= a[pos] ^ b[pos];
     }
     return !(result ^ 0);
+  },
+
+  /* bino copy */
+
+  copy: function () {
+    return bino(this.data.slice(), this.bits);
   },
     
   /* read/write strings of bits */
