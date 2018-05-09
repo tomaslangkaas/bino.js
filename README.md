@@ -56,6 +56,15 @@ var binoInstance = bino([0 | 0xa1a2a3a4,
                          0 | 0xa5a6a7a8]);
 ```
 
+In JavaScript, a common naming convention is to capitalize class constructor names. As `bino()` is a constructor (sort of), it is also aliased as `Bino()`. The `new` operator also works fine with `Bino()`, but makes no difference in practice. The following 3 examples are all equivalent:
+
+```javascript
+// the bit string '11111'
+var binoInstance = bino([0 | 0xffffffff], 5);
+var binoInstance = Bino([0 | 0xffffffff], 5);
+var binoInstance = new Bino([0 | 0xffffffff], 5);
+```
+
 #### `binoInstance.data`
 
 Array of signed 32-bit integers representing the binary data of the `bino` instance. Do not modify this without using `binoInstance.setup`.
