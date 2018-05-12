@@ -247,6 +247,14 @@ Reads binary data as bit representation from a string, and overwrites any existi
 bino().fromBinary('001011010').toSource();
 > "bino([754974720],9)"
 
+bino()
+  .fromBinary(
+    '00100100 00111111 01101010 10001000 ' +
+    '10000101 10100011 00001000 11010011 ' +
+    '00010011 00011001 10001010 00101110')
+   .toHex();
+> "243f6a8885a308d313198a2e"
+
 bino().fromBinary('11 1 1:1 -- 11 *1')
   .compare(bino(0xff << 24, 8))
 > true
