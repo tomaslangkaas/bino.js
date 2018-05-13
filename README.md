@@ -1,6 +1,12 @@
 # bino.js
 
-`bino.js` &ndash; *binary data in JavaScript objects*
+`bino.js` &ndash; *storing binary data in JavaScript objects*
+
+`bino.js` is a small JavaScript library for representing binary data and converting to and from different formats, such as hexadecimal, base-64, bitstrings. A `bino` instance is simply a JavaScript object with two properties, `data` is an array of signed 32-bit integers, representing the binary data, and `bits` is an integer representing the bit length of the current data. In addition, a `bino` instance has several methods for converting to and from different text representations of binary data.
+
+`bino.js` is written in ES3-compliant JavaScript, in order to run almost anywhere (including really old browsers and runtimes). 
+
+`bino.js` has been tested in IE6+, FF3.6+, Chrome 12+, Safari 4+. Run tests [online](https://tomaslangkaas.github.io/bino.js/).
 
 ```javascript
 bino()
@@ -34,6 +40,10 @@ bino([1651076719,778728418,-2137757325,544696417,1950285824],144)
 ## Reference
 
 ### Core
+
+#### `bino.version`
+
+The version of the library.
 
 #### `bino([data][, bits])`
 
@@ -235,7 +245,7 @@ bino()
   "ZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm\n" +
   "5hbCBwbGVhc3VyZS4="
 
-bino().fromBinary('101').toText();
+bino().fromBinary('101').toBase64();
 > undefined
 ```
 

@@ -1,5 +1,5 @@
 (function (inherit) {
-  bino.version = 'v0.1.0';
+  bino.version = 'v0.2.0';
   
   function construct (dwords, bitlength) {
     this.setup(dwords, bitlength);
@@ -18,7 +18,7 @@
   
   inherit.setup = function (data, bits) {
     this.data = data;
-    bits = this.bits = bits || data.length << 5;
+    bits = this.bits = bits === void 0 ? data.length << 5 : bits;
     data.length = (bits + 31) >>> 5;
     data[data.length - 1] &= -1 << (32 - (bits & 31));
     return this;
