@@ -146,7 +146,7 @@ bino([0 | 0xffffffff, 0 | 0xffffffff], 57).toSource();
 > "bino([-1,-128],57)"
 
 done(bino([0 | 0xffffffff, 0 | 0xffffffff], 57).toSource(true); 
-> "bino([0 | 0xffffffff, 0 | 0xffffff80],57)"
+> "bino([0|0xffffffff,0|0xffffff80],57)"
 ```
 
 #### `binoInstance.copy()`

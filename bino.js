@@ -178,7 +178,7 @@
   /* generate JavaScript source representation of bino instance */
   
   toSource: function (hex) {
-    return 'bino([' + (hex ? '0 | 0x' + this.toHex(8, ', 0 | 0x', true) : this.data) + '],' + this.bits + ')';
+    return 'bino([' + (hex ? '0|0x' + this.toHex(8, ',0|0x', true) : this.data) + '],' + this.bits + ')';
   },
   
   /* constant-time comparison to another bino instance */
