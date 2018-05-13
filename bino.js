@@ -1,5 +1,5 @@
 (function (inherit) {
-  bino.version = 'v0.2.0';
+  bino.version = 'v0.3.0';
   
   function construct (dwords, bitlength) {
     this.setup(dwords, bitlength);
@@ -33,10 +33,6 @@
   };
   
 })({
-  /* 
-    all functions below are independent modules,
-    any may be removed without any side effects
-  */
   
   /* read/write hexadecimal representations */
   
@@ -59,18 +55,18 @@
     }
     return this.setup(bin, bits);
   },
-  toHex: function (chunkSize, delimiter) {
+  toHex: function (chunkSize, delimiter, ignoreBits) {
     var bits = this.bits,
         hex = "",
         pos = 0,
         data = this.data,
-        len = data.length;
-    if ((bits & 3) === 0) {
+        len = (bits + 31) >>> 5;
+    if ((bits & 3) === 0 || ignoreBits) {
       while (pos < len) {
         hex += ((data[pos++] | 0) + 0xf00000000)
           .toString(16).slice(1)
       }
-      hex = hex.slice(0, bits / 4);
+      hex = ignoreBits ? hex : hex.slice(0, bits / 4);
       return chunkSize ?
         bino.group(hex, chunkSize, delimiter || ' ') :
         hex;
@@ -181,8 +177,8 @@
   
   /* generate JavaScript source representation of bino instance */
   
-  toSource: function () {
-    return 'bino([' + this.data + '],' + this.bits + ')';
+  toSource: function (hex) {
+    return 'bino([' + (hex ? '0 | 0x' + this.toHex(8, ', 0 | 0x', true) : this.data) + '],' + this.bits + ')';
   },
   
   /* constant-time comparison to another bino instance */
@@ -192,8 +188,9 @@
         result = 0,
         a = this.data,
         b = binoInstance.data,
-        len = this.bits >>> 5;
-    if (this.bits !== binoInstance.bits){
+        bits = this.bits,
+        len = (bits + 31) >>> 5;
+    if (bits !== binoInstance.bits){
       return false;
     }
     for (; pos < len; pos++) {
@@ -230,7 +227,7 @@
     var binString = "",
         pos = 0,
         data = this.data,
-        len = data.length;
+        len = (this.bits + 31) >>> 5;
     while (pos < len) {
       binString += ((data[pos++] | 0) + 0xf00000000)
         .toString(2).slice(4)

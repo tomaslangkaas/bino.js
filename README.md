@@ -137,17 +137,16 @@ bino([0 | 0xffffffff], 4)
 > false
 ```
 
-#### `binoInstance.toSource()`
+#### `binoInstance.toSource([asHex])`
 
-Returns JavaScript source code representation of a `bino` instance.
+Returns JavaScript source code representation of a `bino` instance. If the optional argument `asHex` is truthy, data are represented in hexadecimal notation.
 
 ```javascript
 bino([0 | 0xffffffff, 0 | 0xffffffff], 57).toSource();
 > "bino([-1,-128],57)"
 
-bino([0 | 0xffffffff, 0 | 0xffffffff], 57)
-  .compare(bino([-1,-128],57));
-> true
+done(bino([0 | 0xffffffff, 0 | 0xffffffff], 57).toSource(true); 
+> "bino([0 | 0xffffffff, 0 | 0xffffff80],57)"
 ```
 
 #### `binoInstance.copy()`
@@ -169,9 +168,9 @@ bino().fromHex('67 8 9:a -- bc *d')
 > true
 ```
 
-#### `binoInstance.toHex([chunkSize][, delimiter])`
+#### `binoInstance.toHex([chunkSize][, delimiter][, ignoreBits])`
 
-Returns a hexadecimal representation of the current data. If `binoInstance.bits` is not a multiple of `4`, it returns `undefined`.
+Returns a hexadecimal representation of the current data. If `binoInstance.bits` is not a multiple of `4`, it returns `undefined`, unless the argument `ignoreBits` is set to a truthy value. If so, all content of `binoInstance.data` is output as hexadecimal.
 
 The optional `chunkSize` and `delimiter` arguments can be used to  format the output in groups.
 
@@ -190,6 +189,9 @@ bino(0x97f00000, 12).toHex();
 
 bino(0x97f00000, 13).toHex();
 > undefined
+
+bino(0x97f00000, 13).toHex(8, '', true);
+> "97f00000"
 ```
 
 #### `binoInstance.fromBase64(base64String)`

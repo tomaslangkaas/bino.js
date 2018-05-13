@@ -1,5 +1,8 @@
 test("bino.version", function (done) {
-  done(typeof bino.version === 'string');
+  done(
+    typeof bino.version === 'string' &&
+    /^v\d+\.\d+\.\d+$/.test(bino.version)
+  );
 });
 
 test("bino()", function (done) {
@@ -80,6 +83,11 @@ test("bino().toSource()", function (done) {
     .toSource() === "bino([-1,-128],57)");
 });
 
+test("bino().toSource(true)", function (done) {
+  done(bino([0 | 0xffffffff, 0 | 0xffffffff], 57)
+    .toSource(true) === "bino([0 | 0xffffffff, 0 | 0xffffff80],57)");
+});
+
 test("bino().copy()", function (done) {
   var obj = bino([-1,-128],57),
       copy = obj.copy();
@@ -133,6 +141,12 @@ test("bino(0x97f00000, 12).toHex()", function (done) {
 test("bino(0x97f00000, 13).toHex()", function (done) {
   done(
     bino(0x97f00000, 13).toHex() === void 0
+  );
+});
+
+test("bino(0x97f00000, 13).toHex(8, '', true)", function (done) {
+  done(
+    bino(0x97f00000, 13).toHex(8, '', true) === "97f00000"
   );
 });
 
