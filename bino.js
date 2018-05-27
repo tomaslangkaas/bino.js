@@ -28,7 +28,7 @@
   
   bino.group = function (str, width, delimiter) {
     return ('' + str).replace(
-      new RegExp('([^]{' + width + '})(?!$)', 'g'), 
+      new RegExp('([\\S\\s]{' + width + '})(?!$)', 'g'), 
       "$1" + delimiter);
   };
   
